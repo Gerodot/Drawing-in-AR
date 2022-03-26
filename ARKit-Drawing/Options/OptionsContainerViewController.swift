@@ -111,7 +111,8 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             ("Green", .green),
             ("Blue", .blue),
             ("Brown", .brown),
-            ("White", .white)
+            ("White", .white),
+            ("Gray", .gray)
         ]
         let options = colors.map { Option(name: $0.0, option: $0.1, showsDisclosureIndicator: true) }
         
@@ -124,7 +125,12 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
     }
     
     private func sizePicker() -> UIViewController {
-        let sizes: [Size] = [.small, .medium, .large, .extraLarge]
+        let sizes: [Size] = [
+            .small,
+            .medium,
+            .large,
+            .extraLarge
+        ]
         let options = sizes.map { Option(option: $0, showsDisclosureIndicator: false) }
         
         let selector = OptionSelectorViewController(options: options)

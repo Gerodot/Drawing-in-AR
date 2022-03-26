@@ -1,7 +1,7 @@
 import UIKit
 import SceneKit
 
-protocol OptionsViewControllerDelegate: class {
+protocol OptionsViewControllerDelegate: AnyObject {
     func objectSelected(node: SCNNode)
     func undoLastObject()
     func togglePlaneVisualization()
@@ -114,6 +114,7 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             ("White", .white),
             ("Gray", .gray)
         ]
+        
         let options = colors.map { Option(name: $0.0, option: $0.1, showsDisclosureIndicator: true) }
         
         let selector = OptionSelectorViewController(options: options)
@@ -121,6 +122,7 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             self.color = option
             self.nav?.pushViewController(self.sizePicker(), animated: true)
         }
+        
         return selector
     }
     

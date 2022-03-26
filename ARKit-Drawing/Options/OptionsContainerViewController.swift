@@ -85,7 +85,14 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
     }
     
     private func shapePicker() -> UIViewController {
-        let shapes: [Shape] = [.box, .sphere, .cylinder, .cone, .torus]
+        let shapes: [Shape] = [
+            .box,
+            .cone,
+            .cylinder,
+            .pyramid,
+            .sphere,
+            .torus,
+        ]
         let options = shapes.map { Option(option: $0) }
         
         let selector = OptionSelectorViewController(options: options)
@@ -150,6 +157,8 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             geometry = SCNCylinder(radius: meters / 2, height: meters)
         case .sphere:
             geometry = SCNSphere(radius: meters)
+        case .pyramid:
+            geometry = SCNPyramid(width: meters * 1.5, height: meters * 0.2, length: meters * 1.5)
         case .torus:
             geometry = SCNTorus(ringRadius: meters*1.5, pipeRadius: meters * 0.2)
         }

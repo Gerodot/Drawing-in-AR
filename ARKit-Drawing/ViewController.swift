@@ -4,7 +4,10 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
+    // MARK: - Outlets
     @IBOutlet var sceneView: ARSCNView!
+    
+    // MARK: - Properies
     let configuration = ARWorldTrackingConfiguration()
     
     enum ObjectPlacementMode {
@@ -13,6 +16,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var objectMode: ObjectPlacementMode = .freeform
     
+    // MARK: - Metods
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showOptions" {
+            let optionsViewController = segue.destination as! OptionsContainerViewController
+            optionsViewController.delegate = self
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,7 +40,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
     }
-
+    
+    // MARK: - Actions
     @IBAction func changeObjectMode(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
@@ -42,15 +54,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             break
         }
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showOptions" {
-            let optionsViewController = segue.destination as! OptionsContainerViewController
-            optionsViewController.delegate = self
-        }
-    }
 }
 
+// MARK: - Extensions
 extension ViewController: OptionsViewControllerDelegate {
     
     func objectSelected(node: SCNNode) {

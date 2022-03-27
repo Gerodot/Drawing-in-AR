@@ -27,6 +27,21 @@ class ViewController: UIViewController {
     
     // MARK: - Metods
     
+    /// Adds a node a user's touch location represented point
+    /// - Parameters:
+    ///   - node: the node to be added
+    ///   - point: point at with user has touched the screen
+    func addNode (_ node: SCNNode, at point: CGPoint) {
+        guard
+            let hitResult = sceneView.hitTest(point, types: .existingPlaneUsingExtent).first,
+            let anchor = hitResult.anchor as? ARPlaneAnchor,
+            anchor.alignment == .horizontal
+        else {return}
+        
+        node.simdTransform = hitResult.worldTransform
+        addNodeToSceneRoot(node)
+    }
+    
     func addNode (_ node: SCNNode, to parentNode: SCNNode) {
         // Clone node to separete copies of objects
         let clonedNode = node.clone()
@@ -96,7 +111,8 @@ class ViewController: UIViewController {
         case .freeform:
             addNodeInFront(selectedNode)
         case .plane:
-            break
+            let point = touch.location(in: sceneView)
+            addNode(selectedNode, at: point)
         case .image:
             break
         }

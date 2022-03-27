@@ -157,14 +157,17 @@ extension ViewController: OptionsViewControllerDelegate {
 // MARK: - ARSCNViewDelegate
 extension ViewController: ARSCNViewDelegate {
     func createFloor(planeAnchor: ARPlaneAnchor) -> SCNNode {
-        let extent = planeAnchor.extent
         
+        // Get estimated plane size
+        let extent = planeAnchor.extent
         let with = CGFloat(extent.x)
         let height = CGFloat(extent.z)
         
+        // Ste plane size
         let plane = SCNPlane(width: with, height: height)
         plane.firstMaterial?.diffuse.contents = UIColor.green
         
+        // Create plane node
         let planeNode = SCNNode(geometry: plane)
         planeNode.eulerAngles.x -= .pi / 2
         planeNode.opacity = 0.2
@@ -187,11 +190,28 @@ extension ViewController: ARSCNViewDelegate {
             print(#line, #function, "Detected horisontal plane anchor") //Needed for debug
             nodeAdded(node, for: planeAnchor)
         default:
-            print(#line,#function, "Uncnown anchor detected")
+            print(#line,#function, "Unknown anchor type \(anchor) detected")
         }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        switch anchor {
+        case let planeAnchor as ARPlaneAnchor:
+            updateFloor(for: node, anchor: planeAnchor)
+        default:
+            print(#line,#function, "Unknown anchor type \(anchor) updated")
+        }
+    }
+    
+    func updateFloor (for node: SCNNode, anchor: ARPlaneAnchor){
+        guard let planeNode = node.childNodes.first, let plane = planeNode.geometry as? SCNPlane else {return}
         
+        // Get estimated plane size
+        let extent = anchor.extent
+        plane.width = CGFloat(extent.x)
+        plane.height = CGFloat(extent.z)
+        
+        // Position plane in hte center
+        planeNode.simdPosition = anchor.center
     }
 }

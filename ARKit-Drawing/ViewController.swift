@@ -160,7 +160,7 @@ extension ViewController: ARSCNViewDelegate {
         let extent = planeAnchor.extent
         
         let with = CGFloat(extent.x)
-        let height = CGFloat(extent.y)
+        let height = CGFloat(extent.z)
         
         let plane = SCNPlane(width: with, height: height)
         plane.firstMaterial?.diffuse.contents = UIColor.green
@@ -178,12 +178,13 @@ extension ViewController: ARSCNViewDelegate {
         // Add plane node to the list of plane nodes
         planeNodes.append(planeNode)
         
-        node.addChildNode(createFloor(planeAnchor: anchor))
+        node.addChildNode(planeNode)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         switch anchor {
         case let planeAnchor as ARPlaneAnchor:
+            print(#line, #function, "Detected horisontal plane anchor") //Needed for debug
             nodeAdded(node, for: planeAnchor)
         default:
             print(#line,#function, "Uncnown anchor detected")

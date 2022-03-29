@@ -115,11 +115,17 @@ class ViewController: UIViewController {
         addNodeToSceneRoot(node)
     }
     
-    func addNodeToImage(_ none: SCNNode) {
-        
+    func addNodeToImage(_ node: SCNNode, at point: CGPoint) {
+        guard
+            let result = sceneView.hitTest(point, options: [:]).first,
+            result.node.name == "image"
+        else {return}
+        node.transform = result.node.worldTransform
+        node.eulerAngles.x = 0
+        addNodeToSceneRoot(node)
     }
     
-    // Add node to ccene root
+    // Add node to scene root
     func addNodeToSceneRoot(_ node: SCNNode) {
         addNode(node, to: sceneView.scene.rootNode)
     }
@@ -146,14 +152,15 @@ class ViewController: UIViewController {
             let selectedNode = selectedNode
         else {return}
         
+        let point = touch.location(in: sceneView)
+        
         switch objectMode {
         case .freeform:
             addNodeInFront(selectedNode)
         case .plane:
-            let point = touch.location(in: sceneView)
             addNode(selectedNode, at: point)
         case .image:
-            addNodeToImage(selectedNode)
+            addNodeToImage(selectedNode, at: point)
         }
     }
     
@@ -252,7 +259,10 @@ extension ViewController: ARSCNViewDelegate {
     func nodeAdded(_ node: SCNNode, for anchor: ARImageAnchor) {
         // Put a plane above image
         let size = anchor.referenceImage.physicalSize
-        let coverNode = createFloor(with: size, opacity: 0.01)
+        print("with:\(size.width), heiht\(size.height)")
+        let coverNode = createFloor(with: size, opacity: 0.1)
+        coverNode.name = "image"
+        
         node.addChildNode(coverNode)
     }
     
@@ -272,6 +282,7 @@ extension ViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         switch anchor {
         case let imageAnchor as ARImageAnchor:
+            print(#line, #function, "Detected image anchor") //Needed for debug
             nodeAdded(node, for: imageAnchor)
         case let planeAnchor as ARPlaneAnchor:
             print(#line, #function, "Detected horisontal plane anchor") //Needed for debug
@@ -283,6 +294,8 @@ extension ViewController: ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         switch anchor {
+        case is ARImageAnchor:
+            break
         case let planeAnchor as ARPlaneAnchor:
             updateFloor(for: node, anchor: planeAnchor)
         default:

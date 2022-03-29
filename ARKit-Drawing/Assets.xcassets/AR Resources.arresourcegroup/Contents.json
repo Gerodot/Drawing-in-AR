@@ -6,6 +6,9 @@
   "resources" : [
     {
       "filename" : "card.arreferenceimage"
+    },
+    {
+      "filename" : "test.arreferenceimage"
     }
   ]
 }

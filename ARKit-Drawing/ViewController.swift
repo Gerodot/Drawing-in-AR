@@ -121,6 +121,7 @@ class ViewController: UIViewController {
             result.node.name == "image"
         else {return}
         node.transform = result.node.worldTransform
+        dump(node.transform)
         node.eulerAngles.x = 0
         addNodeToSceneRoot(node)
     }
@@ -164,11 +165,29 @@ class ViewController: UIViewController {
         }
     }
     
-    func reloadConfiguretion () {
+    func reloadConfiguretion (reset: Bool = false) {
+        // Clear objects placed
+        objetsPlaced.forEach { $0.removeFromParentNode() }
+        objetsPlaced.removeAll()
+        
+        // Clear placed planes
+        planeNodes.forEach{ $0.removeFromParentNode() }
+        planeNodes.removeAll()
+        
+        // Hide all future planes
+        arePlanesHidden = false
+        
+        // Add people occlusion
+        peopleOcclusionAdd()
+        
+        // Remove exisiting anchors if resert rue
+        let options: ARSession.RunOptions = reset ? .removeExistingAnchors : []
+        
+        // Reload configuration
         configuration.detectionImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil)
         configuration.planeDetection = .horizontal
-        peopleOcclusionAdd()
-        sceneView.session.run(configuration)
+        
+        sceneView.session.run(configuration, options: options)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -222,21 +241,28 @@ class ViewController: UIViewController {
 extension ViewController: OptionsViewControllerDelegate {
     
     func objectSelected(node: SCNNode) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         selectedNode = node
     }
     
     func togglePlaneVisualization() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         guard objectMode == .plane else {return}
         arePlanesHidden.toggle()
     }
     
     func undoLastObject() {
+        if let lastObject = objetsPlaced.last {
+            lastObject.removeFromParentNode()
+            objetsPlaced.removeLast()
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     func resetScene() {
-        dismiss(animated: true, completion: nil)
+reloadConfiguretion(reset: true)
+        dismiss(animated: true)
     }
 }
 

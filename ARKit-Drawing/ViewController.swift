@@ -139,7 +139,7 @@ class ViewController: UIViewController {
         if #available(iOS 13.0, *) {
             configuration.frameSemantics.insert(.personSegmentationWithDepth)
         } else {
-            print(#line, #function, "People occlusion not supported please update your OS to version 13 or newer")
+            print(#line, #function, "People occlusion is not supported, please update your iOS to version 13 or newer")
         }
     }
     

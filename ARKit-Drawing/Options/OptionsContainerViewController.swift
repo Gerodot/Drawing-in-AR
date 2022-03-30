@@ -86,7 +86,7 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             
             // Add USDZ support
             if name.contains("usdz") {
-                scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)")!
+                scene = SCNScene(named: "\(resourceFolder)/\(name)")!
             } else {
                 scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)/\(name)")!
             }

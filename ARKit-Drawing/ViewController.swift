@@ -78,7 +78,7 @@ class ViewController: UIViewController {
         
         // Fix piviot point to ground from bounding box ground coordinate
         clonedNode.simdPivot.columns.3.y = clonedNode.boundingBox.min.y
-        print(#line,#function,dump( clonedNode)) //
+        print(#line,#function,dump(clonedNode)) // For debug
         
         // Remeber last placed node
         lastNode = clonedNode
@@ -179,7 +179,7 @@ class ViewController: UIViewController {
         planeNodes.removeAll()
         
         // Hide all future planes
-        arePlanesHidden = false
+        arePlanesHidden = true
         
         // Add people occlusion
         peopleOcclusionAdd()

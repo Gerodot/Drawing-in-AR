@@ -125,8 +125,7 @@ class ViewController: UIViewController {
             result.node.name == "image"
         else {return}
         node.transform = result.node.worldTransform
-        dump(node.transform)
-        node.eulerAngles.x = 0
+        node.eulerAngles.x  += .pi / 2 // Fix elier angle x axis
         addNodeToSceneRoot(node)
     }
     

@@ -83,11 +83,14 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
         selector.optionSelectionCallback = { [unowned self] name in
             let nameWithoutExtension = name.replacingOccurrences(of: ".scn", with: "")
             let scene: SCNScene
+            
+            // Add USDZ support
             if name.contains("usdz") {
                 scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)")!
             } else {
                 scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)/\(name)")!
             }
+            
             self.delegate?.objectSelected(node: scene.rootNode)
         }
         return selector

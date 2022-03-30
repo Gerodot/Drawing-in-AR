@@ -76,6 +76,10 @@ class ViewController: UIViewController {
         // Clone node to separete copies of objects
         let clonedNode = node.clone()
         
+        // Fix piviot point to ground from bounding box ground coordinate
+        clonedNode.simdPivot.columns.3.y = clonedNode.boundingBox.min.y
+        print(#line,#function,dump( clonedNode)) //
+        
         // Remeber last placed node
         lastNode = clonedNode
         
@@ -136,7 +140,7 @@ class ViewController: UIViewController {
         if #available(iOS 13.0, *) {
             configuration.frameSemantics.insert(.personSegmentationWithDepth)
         } else {
-            // Fallback on earlier versions
+            print(#line, #function, "People occlusion not supported please update your OS to version 13 or newer")
         }
     }
     
@@ -261,7 +265,7 @@ extension ViewController: OptionsViewControllerDelegate {
     }
     
     func resetScene() {
-reloadConfiguretion(reset: true)
+        reloadConfiguretion(reset: true)
         dismiss(animated: true)
     }
 }

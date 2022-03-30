@@ -68,7 +68,11 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             return fileEnumerator.compactMap { element in
                 let url = element as! URL
                 
-                guard url.pathExtension == "scn" || url.pathExtension == "dae" || url.pathExtension == "usdz" else { return nil }
+                guard
+                    url.pathExtension == "scn" ||
+                    url.pathExtension == "dae" ||
+                    url.pathExtension == "usdz"
+                else { return nil }
                 
                 return url.lastPathComponent
             }
@@ -78,7 +82,12 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
         let selector = OptionSelectorViewController(options: options)
         selector.optionSelectionCallback = { [unowned self] name in
             let nameWithoutExtension = name.replacingOccurrences(of: ".scn", with: "")
-            let scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)/\(name)")!
+            let scene: SCNScene
+            if name.contains("usdz") {
+                scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)")!
+            } else {
+                scene = SCNScene(named: "\(resourceFolder)/\(nameWithoutExtension)/\(name)")!
+            }
             self.delegate?.objectSelected(node: scene.rootNode)
         }
         return selector
@@ -134,7 +143,7 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             .extraLarge
         ]
         let options = sizes.map { Option(option: $0, showsDisclosureIndicator: false) }
-        
+
         let selector = OptionSelectorViewController(options: options)
         selector.optionSelectionCallback = { [unowned self] option in
             let node = self.createNode(shape: self.shape, color: self.color, size: option)
@@ -168,9 +177,9 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
         case .sphere:
             geometry = SCNSphere(radius: meters)
         case .pyramid:
-            geometry = SCNPyramid(width: meters * 1.5, height: meters * 0.2, length: meters * 1.5)
+            geometry = SCNPyramid(width: meters * 1.5, height: meters * 1.2, length: meters * 1.5)
         case .torus:
-            geometry = SCNTorus(ringRadius: meters*1.5, pipeRadius: meters * 0.2)
+            geometry = SCNTorus(ringRadius: meters * 1.5, pipeRadius: meters * 0.2)
         }
         
         geometry.firstMaterial?.diffuse.contents = color

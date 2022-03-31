@@ -79,7 +79,11 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
         }()
         
         let options = availableScenes.map { Option(name: $0, option: $0, showsDisclosureIndicator: false) }
-        let selector = OptionSelectorViewController(options: options)
+        
+        // Sort options by alphabet
+        let sortedListOptions = options.sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
+        
+        let selector = OptionSelectorViewController(options: sortedListOptions)
         selector.optionSelectionCallback = { [unowned self] name in
             let nameWithoutExtension = name.replacingOccurrences(of: ".scn", with: "")
             let scene: SCNScene
@@ -93,6 +97,7 @@ class OptionsContainerViewController: UIViewController, UINavigationControllerDe
             
             self.delegate?.objectSelected(node: scene.rootNode)
         }
+        print(#line,#function,options)
         return selector
     }
     
